@@ -24,4 +24,13 @@ public class Logistics implements Serializable {
     float prixUnit;
     int quantite;
 
+
+    // Constructeur personnalisé pour les tests
+    public Logistics(boolean reserve, float prixUnit, int quantite) {
+        this.reserve = reserve;
+        this.prixUnit = prixUnit;
+        this.quantite = quantite;
+    }
+
+
 }
