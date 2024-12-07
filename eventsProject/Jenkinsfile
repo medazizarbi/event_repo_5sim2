@@ -1,0 +1,47 @@
+pipeline {
+    agent any
+
+    environment {
+        GIT_REPO = 'https://github.com/medazizarbi/event_repo_5sim2.git' // Replace with your Git repository URL
+        BRANCH = 'med_aziz_el_arbi' // Replace with the branch you want to build
+    }
+
+    stages {
+        stage('Checkout Code') {
+            steps {
+                echo "Cloning the repository from Git..."
+                git branch: "${BRANCH}", url: "${GIT_REPO}"
+            }
+        }
+
+        stage('Compile Project') {
+            steps {
+                echo "Compiling the project using Maven..."
+                sh 'mvn clean compile'
+            }
+        }
+
+        stage('Run Unit Tests') {
+            steps {
+                echo "Running unit tests with Maven (including Mockito tests)..."
+                sh 'mvn test'
+            }
+        }
+
+        stage('Package Application') {
+            steps {
+                echo "Packaging the application into a JAR/WAR file..."
+                sh 'mvn package'
+            }
+        }
+    }
+
+    post {
+        success {
+            echo "Pipeline completed successfully!"
+        }
+        failure {
+            echo "Pipeline failed. Check the logs for details."
+        }
+    }
+}
