@@ -17,24 +17,27 @@ pipeline {
         stage('Compile Project') {
             steps {
                 echo "Compiling the project using Maven..."
-                dir('eventsProject')  //  Navigate to the 'eventsProjet' directory
+                dir('eventsProject')  { //  Navigate to the 'eventsProjet' directory
                 sh 'mvn clean compile'
+                }
             }
         }
 
         stage('Run Unit Tests') {
             steps {
                 echo "Running unit tests with Maven (including Mockito tests)..."
-                dir('eventsProject')  //  Navigate to the 'eventsProjet' directory
+                dir('eventsProject') { //  Navigate to the 'eventsProjet' directory
                 sh 'mvn test'
+                }
             }
         }
 
         stage('Package Application') {
             steps {
                 echo "Packaging the application into a JAR/WAR file..."
-                dir('eventsProject')  //  Navigate to the 'eventsProjet' directory
+                dir('eventsProject') { //  Navigate to the 'eventsProjet' directory
                 sh 'mvn package'
+                }
             }
         }
     }
