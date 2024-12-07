@@ -17,7 +17,7 @@ pipeline {
         stage('Compile Project') {
             steps {
                 echo "Compiling the project using Maven..."
-                dir('eventsProject') { //  Navigate to the 'eventsProjet' directory
+                dir('eventsProject')  //  Navigate to the 'eventsProjet' directory
                 sh 'mvn clean compile'
             }
         }
