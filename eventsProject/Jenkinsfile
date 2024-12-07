@@ -25,6 +25,7 @@ pipeline {
         stage('Run Unit Tests') {
             steps {
                 echo "Running unit tests with Maven (including Mockito tests)..."
+                dir('eventsProject')  //  Navigate to the 'eventsProjet' directory
                 sh 'mvn test'
             }
         }
@@ -32,6 +33,7 @@ pipeline {
         stage('Package Application') {
             steps {
                 echo "Packaging the application into a JAR/WAR file..."
+                dir('eventsProject')  //  Navigate to the 'eventsProjet' directory
                 sh 'mvn package'
             }
         }
