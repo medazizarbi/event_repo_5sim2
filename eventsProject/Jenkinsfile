@@ -4,6 +4,9 @@ pipeline {
     environment {
         GIT_REPO = 'https://github.com/medazizarbi/event_repo_5sim2.git' // Replace with your Git repository URL
         BRANCH = 'med_aziz_el_arbi' // Replace with the branch you want to build
+        SONAR_HOST_URL = 'http://192.168.33.10:9000' // Replace with your SonarQube server URL
+        SONAR_TOKEN = credentials('jenkins-sonar') // The ID of the Jenkins credential you created for SonarQube
+
     }
 
     stages {
@@ -31,6 +34,24 @@ pipeline {
                 }
             }
         }
+
+
+        stage('SonarQube Analysis') {
+            steps {
+                echo "Running SonarQube analysis..."
+                dir('eventsProject') { // Navigate to the 'eventsProject' directory
+                    sh """
+                    mvn sonar:sonar \
+                    -Dsonar.projectKey=eventsProject-key \
+                    -Dsonar.host.url=${SONAR_HOST_URL} \
+                    -Dsonar.login=${SONAR_TOKEN} \
+                    -Dsonar.java.binaries=target/classes
+                    """
+                }
+            }
+        }
+
+
 
         stage('Package Application') {
             steps {
