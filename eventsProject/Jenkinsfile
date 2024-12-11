@@ -63,7 +63,7 @@ pipeline {
                 }
             }
         }
-    }
+
 
 
         stage('Deploy to Nexus') {
@@ -80,6 +80,13 @@ pipeline {
             }
         }
     }
+
+
+
+
+    }
+
+
 
 
 
