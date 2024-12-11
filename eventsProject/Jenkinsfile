@@ -5,10 +5,6 @@ pipeline {
         GIT_REPO = 'https://github.com/medazizarbi/event_repo_5sim2.git' // Replace with your Git repository URL
         BRANCH = 'med_aziz_el_arbi' // Replace with the branch you want to build
         SONAR_HOST_URL = 'http://192.168.33.10:9000' // Replace with your SonarQube server URL
-        SONAR_TOKEN = credentials('jenkins-sonar') // The ID of the Jenkins credential you created for SonarQube
-        NEXUS_REPO_URL = 'http://192.168.33.10:8081/repository/maven-releases/' // Nexus repository URL
-        NEXUS_CREDENTIALS = credentials('nexus-cred') // Nexus credentials ID
-
     }
 
     stages {
@@ -22,8 +18,8 @@ pipeline {
         stage('Compile Project') {
             steps {
                 echo "Compiling the project using Maven..."
-                dir('eventsProject')  { //  Navigate to the 'eventsProjet' directory
-                sh 'mvn clean compile'
+                dir('eventsProject')  { // Navigate to the 'eventsProject' directory
+                    sh 'mvn clean compile'
                 }
             }
         }
@@ -31,12 +27,11 @@ pipeline {
         stage('Run Unit Tests') {
             steps {
                 echo "Running unit tests with Maven (including Mockito tests)..."
-                dir('eventsProject') { //  Navigate to the 'eventsProjet' directory
-                sh 'mvn test'
+                dir('eventsProject') { // Navigate to the 'eventsProject' directory
+                    sh 'mvn test'
                 }
             }
         }
-
 
         stage('SonarQube Analysis') {
             steps {
@@ -53,39 +48,31 @@ pipeline {
             }
         }
 
-
-
         stage('Package Application') {
             steps {
                 echo "Packaging the application into a JAR/WAR file..."
-                dir('eventsProject') { //  Navigate to the 'eventsProjet' directory
-                sh 'mvn package'
+                dir('eventsProject') { // Navigate to the 'eventsProject' directory
+                    sh 'mvn package'
                 }
             }
         }
-
-
 
         stage('Deploy to Nexus') {
             steps {
                 echo "Deploying the artifact to Nexus..."
                 dir('eventsProject') {
-                    sh """
-                    mvn deploy \
-                    -DaltDeploymentRepository=nexus::default::${NEXUS_REPO_URL} \
-                    -Dnexus.username=${NEXUS_CREDENTIALS_USR} \
-                    -Dnexus.password=${NEXUS_CREDENTIALS_PSW}
-                    """
+                    withCredentials([usernamePassword(credentialsId: 'nexus-cred', passwordVariable: 'NEXUS_PASSWORD', usernameVariable: 'NEXUS_USERNAME')]) {
+                        sh """
+                        mvn deploy \
+                        -DaltDeploymentRepository=nexus::default::${NEXUS_REPO_URL} \
+                        -Dnexus.username=${NEXUS_USERNAME} \
+                        -Dnexus.password=${NEXUS_PASSWORD}
+                        """
+                    }
                 }
             }
         }
-
-
-
     }
-
-
-
 
     post {
         success {
