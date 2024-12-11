@@ -37,7 +37,7 @@ pipeline {
             }
         }
 
-/*
+
         stage('SonarQube Analysis') {
             steps {
                 echo "Running SonarQube analysis..."
@@ -52,7 +52,7 @@ pipeline {
                 }
             }
         }
-*/
+
 
 
         stage('Package Application') {
