@@ -5,7 +5,7 @@ FROM openjdk:17-jdk-slim
 WORKDIR /app
 
 # Copy the JAR file from the target directory to the container
-COPY target/eventsProject.jar app.jar
+COPY target/eventsProject-1.0.0.jar app.jar
 
 # Expose the port that your app runs on
 EXPOSE 8089
