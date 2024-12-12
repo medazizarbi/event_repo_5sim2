@@ -60,22 +60,11 @@ pipeline {
             }
         }
 
-        stage('Deploy to Nexus') {
-            steps {
-                echo "Deploying the artifact to Nexus..."
-                dir('eventsProject') {
-                    withCredentials([usernamePassword(credentialsId: 'nexus-cred', passwordVariable: 'NEXUS_PASSWORD', usernameVariable: 'NEXUS_USERNAME')]) {
-                        sh """
-                        mvn deploy \
-                        -DaltDeploymentRepository=nexus::default::${NEXUS_REPO_URL} \
-                        -Dnexus.username=${NEXUS_USERNAME} \
-                        -Dnexus.password=${NEXUS_PASSWORD}
-                        """
-                    }
-                }
-            }
-        }
-    }
+stage('Deploy to Nexus') {
+steps {
+echo "Deploying the artifact to Nexus..." dir('eventsProject') {
+withCredentials([usernamePassword(credentialsId: 'nexus-cred', passwordVariable: 'NEXUS_PASSWORD', usernameVariable: 'NEXUS_USERNAME')]) { sh 'mvn deploy -DaltDeploymentRepository=nexus::default::${NEXUS_REPO_URL}'
+ } } } } }
 
     post {
         success {
