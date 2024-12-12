@@ -25,7 +25,7 @@
         <repository>
             <id>eventsProject-releases</id>
             <name>eventsProject-releases</name>
-            <url>http://localhost:8081/repository/eventsProject-releases/</url>
+            <url>http://192.168.33.10:8081/repository/eventsProject-releases/</url>
         </repository>
     </distributionManagement>
 
