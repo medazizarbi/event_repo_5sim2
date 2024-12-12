@@ -7,6 +7,7 @@ pipeline {
         SONAR_HOST_URL = 'http://192.168.33.10:9000' // Replace with your SonarQube server URL
         SONAR_TOKEN = credentials('jenkins-sonar')
         NEXUS_REPO_URL = 'http://192.168.33.10:8081'
+        DOCKER_IMAGE = 'medazizelarbi/events-project:1.0.0'
 
     }
 
@@ -65,6 +66,37 @@ pipeline {
          withCredentials([usernamePassword(credentialsId: 'nexus-cred', passwordVariable: 'NEXUS_PASSWORD', usernameVariable: 'NEXUS_USERNAME')]) {
           sh 'mvn deploy -DaltDeploymentRepository=nexus::default::${NEXUS_REPO_URL}'
           } } } } }
+
+
+        stage('Build Docker Image') {
+            steps {
+                echo "Building Docker Image..."
+                sh 'docker build -t ${DOCKER_IMAGE} .'
+            }
+        }
+
+        stage('Push Docker Image') {
+            steps {
+                echo "Pushing Docker Image to Docker Hub..."
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-cred', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                    sh """
+                    docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+                    docker push ${DOCKER_IMAGE}
+                    """
+                }
+            }
+        }
+
+        stage('Run Docker Compose') {
+            steps {
+                echo "Launching services with Docker Compose..."
+                sh 'docker compose up -d'
+            }
+        }
+    }
+
+
+
 
 
 
