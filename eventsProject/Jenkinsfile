@@ -70,31 +70,34 @@ pipeline {
                 }
             }
         }
-*/  
+*/
         stage('Build Docker Image') {
             steps {
                 echo "Building Docker Image..."
+                dir('eventsProject') {
                 sh 'docker build -t ${DOCKER_IMAGE} .'
-            }
+            }}
         }
 
         stage('Push Docker Image') {
             steps {
                 echo "Pushing Docker Image to Docker Hub..."
                 withCredentials([usernamePassword(credentialsId: 'dockerhub-cred', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                dir('eventsProject') {
                     sh """
                     docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
                     docker push ${DOCKER_IMAGE}
                     """
-                }
+                }}
             }
         }
 
         stage('Run Docker Compose') {
             steps {
                 echo "Launching services with Docker Compose..."
+                dir('eventsProject') {
                 sh 'docker compose up -d'
-            }
+            }}
         }
     }
 
