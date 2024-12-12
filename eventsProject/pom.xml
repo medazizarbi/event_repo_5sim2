@@ -23,9 +23,9 @@
     </properties>
     <distributionManagement>
         <repository>
-            <id>nexus</id>
-            <name>Nexus Repository</name>
-            <url>http://localhost:8081/repository/maven-releases/</url>
+            <id>eventsProject-releases</id>
+            <name>Events Project Releases Repository</name>
+            <url>http://localhost:8081/repository/eventsProject-releases/</url>
         </repository>
     </distributionManagement>
 
