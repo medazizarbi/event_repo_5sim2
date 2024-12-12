@@ -6,6 +6,8 @@ pipeline {
         BRANCH = 'med_aziz_el_arbi' // Replace with the branch you want to build
         SONAR_HOST_URL = 'http://192.168.33.10:9000' // Replace with your SonarQube server URL
         SONAR_TOKEN = credentials('jenkins-sonar')
+        NEXUS_REPO_URL = 'http://192.168.33.10:8081'
+
     }
 
     stages {
