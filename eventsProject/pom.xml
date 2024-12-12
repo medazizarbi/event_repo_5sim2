@@ -24,7 +24,7 @@
     <distributionManagement>
         <repository>
             <id>eventsProject-releases</id>
-            <name>Events Project Releases Repository</name>
+            <name>eventsProject-releases</name>
             <url>http://localhost:8081/repository/eventsProject-releases/</url>
         </repository>
     </distributionManagement>

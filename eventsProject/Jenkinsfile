@@ -8,7 +8,6 @@ pipeline {
         SONAR_TOKEN = credentials('jenkins-sonar')
         NEXUS_REPO_URL = 'http://192.168.33.10:8081'
         DOCKER_IMAGE = 'medazizelarbi/events-project:1.0.0'
-
     }
 
     stages {
@@ -22,7 +21,7 @@ pipeline {
         stage('Compile Project') {
             steps {
                 echo "Compiling the project using Maven..."
-                dir('eventsProject')  { // Navigate to the 'eventsProject' directory
+                dir('eventsProject') {
                     sh 'mvn clean compile'
                 }
             }
@@ -31,7 +30,7 @@ pipeline {
         stage('Run Unit Tests') {
             steps {
                 echo "Running unit tests with Maven (including Mockito tests)..."
-                dir('eventsProject') { // Navigate to the 'eventsProject' directory
+                dir('eventsProject') {
                     sh 'mvn test'
                 }
             }
@@ -40,7 +39,7 @@ pipeline {
         stage('SonarQube Analysis') {
             steps {
                 echo "Running SonarQube analysis..."
-                dir('eventsProject') { // Navigate to the 'eventsProject' directory
+                dir('eventsProject') {
                     sh """
                     mvn sonar:sonar \
                     -Dsonar.projectKey=eventsProject-key \
@@ -55,18 +54,22 @@ pipeline {
         stage('Package Application') {
             steps {
                 echo "Packaging the application into a JAR/WAR file..."
-                dir('eventsProject') { // Navigate to the 'eventsProject' directory
+                dir('eventsProject') {
                     sh 'mvn package'
                 }
             }
         }
-        stage('Deploy to Nexus') {
-         steps { echo "Deploying the artifact to Nexus..."
-         dir('eventsProject') {
-         withCredentials([usernamePassword(credentialsId: 'nexus-cred', passwordVariable: 'NEXUS_PASSWORD', usernameVariable: 'NEXUS_USERNAME')]) {
-          sh 'mvn deploy -DaltDeploymentRepository=nexus::default::${NEXUS_REPO_URL}'
-          } } } }
 
+        stage('Deploy to Nexus') {
+            steps {
+                echo "Deploying the artifact to Nexus..."
+                dir('eventsProject') {
+                    withCredentials([usernamePassword(credentialsId: 'nexus-cred', passwordVariable: 'NEXUS_PASSWORD', usernameVariable: 'NEXUS_USERNAME')]) {
+                        sh 'mvn deploy -DaltDeploymentRepository=nexus::default::${NEXUS_REPO_URL}/repository/eventsProject-releases'
+                    }
+                }
+            }
+        }
 
         stage('Build Docker Image') {
             steps {
@@ -94,11 +97,6 @@ pipeline {
             }
         }
     }
-
-
-}
-
-
 
     post {
         success {
